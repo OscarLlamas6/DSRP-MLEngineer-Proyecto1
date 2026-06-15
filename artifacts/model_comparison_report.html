@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Model Comparison Report — Red Wine Quality</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f8f9fa; }
+    h1   { color: #343a40; }
+    h2   { color: #495057; margin-top: 30px; }
+    table { border-collapse: collapse; width: 100%; max-width: 800px; margin-top: 10px; }
+    th   { background-color: #343a40; color: white; padding: 10px 14px; text-align: left; }
+    td   { padding: 8px 14px; border-bottom: 1px solid #dee2e6; }
+    tr:nth-child(even) { background-color: #e9ecef; }
+    .best { background-color: #d4edda; font-weight: bold; }
+    .footer { color: #6c757d; font-size: 12px; margin-top: 30px; }
+  </style>
+</head>
+<body>
+  <h1>🍷 Red Wine Quality Classifier — Reporte de Modelos</h1>
+  <p><strong>Proyecto 1 · Especialización Machine Learning Engineering (DSRP 2026)</strong></p>
+
+  <h2>Métricas Offline (Conjunto de Test — 20%)</h2>
+  <table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>accuracy</th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>f1</th>
+      <th>roc_auc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Logistic Regression</th>
+      <td>0.7353</td>
+      <td>0.7609</td>
+      <td>0.7292</td>
+      <td>0.7447</td>
+      <td>0.8116</td>
+    </tr>
+    <tr>
+      <th>Decision Tree</th>
+      <td>0.6544</td>
+      <td>0.6761</td>
+      <td>0.6667</td>
+      <td>0.6713</td>
+      <td>0.7484</td>
+    </tr>
+    <tr>
+      <th>Random Forest</th>
+      <td>0.7721</td>
+      <td>0.7971</td>
+      <td>0.7639</td>
+      <td>0.7801</td>
+      <td>0.8363</td>
+    </tr>
+  </tbody>
+</table>
+
+  <h2>Mejor Modelo: Random Forest ⭐</h2>
+  <ul>
+    <li><strong>accuracy:</strong> 0.7721</li>
+    <li><strong>precision:</strong> 0.7971</li>
+    <li><strong>recall:</strong> 0.7639</li>
+    <li><strong>f1:</strong> 0.7801</li>
+    <li><strong>roc_auc:</strong> 0.8363</li>
+  </ul>
+
+  <h2>Features más Importantes</h2>
+  <table>
+    <tr><th>Feature</th><th>Importancia (Gini)</th></tr>
+    <tr><td>alcohol</td><td>0.2661</td></tr>
+    <tr><td>sulphates</td><td>0.1410</td></tr>
+    <tr><td>volatile acidity</td><td>0.1111</td></tr>
+    <tr><td>total sulfur dioxide</td><td>0.0942</td></tr>
+    <tr><td>density</td><td>0.0839</td></tr>
+  </table>
+
+  <p class="footer">Generado por: notebooks/02_machine_learning_y_llms.ipynb</p>
+</body>
+</html>

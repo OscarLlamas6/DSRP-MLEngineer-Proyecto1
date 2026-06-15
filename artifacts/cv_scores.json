@@ -1,0 +1,14 @@
+{
+  "Logistic Regression": {
+    "mean": 0.8164,
+    "std": 0.0234
+  },
+  "Decision Tree": {
+    "mean": 0.7318,
+    "std": 0.0246
+  },
+  "Random Forest": {
+    "mean": 0.8762,
+    "std": 0.011
+  }
+}
