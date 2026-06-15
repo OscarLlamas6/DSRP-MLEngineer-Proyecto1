@@ -1,0 +1,76 @@
+version: '3'
+
+vars:
+  PYTHON: .venv/bin/python3
+  PIP:    .venv/bin/pip
+  JUPYTER: .venv/bin/jupyter
+
+tasks:
+
+  # ── Entorno ────────────────────────────────────────────────────────────────
+  setup:
+    desc: "Crea el entorno virtual e instala dependencias"
+    cmds:
+      - python3 -m venv .venv
+      - "{{.PIP}} install -q --upgrade pip"
+      - "{{.PIP}} install -q -r requirements.txt"
+      - "{{.PIP}} install -q nbconvert ipykernel"
+    status:
+      - test -f .venv/bin/activate
+
+  # ── Pipeline de datos ──────────────────────────────────────────────────────
+  preprocess:
+    desc: "Descarga el dataset y genera los archivos preprocesados en data/"
+    deps: [setup]
+    cmds:
+      - "{{.PYTHON}} scripts/preprocess.py"
+
+  # ── Entrenamiento ──────────────────────────────────────────────────────────
+  train:
+    desc: "Entrena los 3 modelos (Logistic Regression, Decision Tree, Random Forest)"
+    deps: [preprocess]
+    cmds:
+      - "{{.PYTHON}} scripts/train.py --model logistic_regression"
+      - "{{.PYTHON}} scripts/train.py --model decision_tree"
+      - "{{.PYTHON}} scripts/train.py --model random_forest"
+
+  # ── Predicción ─────────────────────────────────────────────────────────────
+  predict:
+    desc: "Genera predicciones del mejor modelo sobre el dataset completo"
+    deps: [train]
+    cmds:
+      - "{{.PYTHON}} scripts/predict.py --input data/winequality-red.csv --model artifacts/random_forest.pkl"
+
+  # ── Notebooks ──────────────────────────────────────────────────────────────
+  nb-preprocess:
+    desc: "Ejecuta el notebook 01 de preprocesamiento y guarda los outputs"
+    deps: [setup]
+    cmds:
+      - "{{.JUPYTER}} nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=300 notebooks/01_preprocesamiento.ipynb"
+
+  nb-ml:
+    desc: "Ejecuta el notebook 02 de ML+LLMs y guarda los outputs (requiere OPENAI_API_KEY en .env)"
+    deps: [nb-preprocess]
+    cmds:
+      - "{{.JUPYTER}} nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=600 notebooks/02_machine_learning_y_llms.ipynb"
+
+  notebooks:
+    desc: "Ejecuta ambos notebooks en orden (requiere OPENAI_API_KEY en .env)"
+    deps: [nb-preprocess, nb-ml]
+
+  # ── Todo de una vez ────────────────────────────────────────────────────────
+  all:
+    desc: "Ejecuta el pipeline completo: setup → notebooks (recomendado)"
+    cmds:
+      - task: setup
+      - task: nb-preprocess
+      - task: nb-ml
+
+  # ── Limpieza ───────────────────────────────────────────────────────────────
+  clean:
+    desc: "Elimina el entorno virtual y los artefactos generados"
+    prompt: "Esto eliminará .venv/ y artifacts/. ¿Continuar?"
+    cmds:
+      - rm -rf .venv
+      - find artifacts/ -not -name '.gitkeep' -type f -delete
+      - find data/ -not -name '.gitkeep' -type f -delete

@@ -216,3 +216,29 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ── Proyecto: Red Wine Quality Classifier ────────────────────────────────────
+
+# Variables de entorno (contienen API keys)
+.env
+
+# Datos locales (se descargan automáticamente al ejecutar los notebooks/scripts)
+data/*.csv
+data/*.parquet
+!data/.gitkeep
+!data/*.txt
+
+# Artefactos generados
+# Solo se ignoran los binarios .pkl (grandes). El resto se versiona para que
+# el evaluador pueda revisar resultados sin ejecutar los notebooks.
+artifacts/*.pkl
+!artifacts/.gitkeep
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# Entornos virtuales
+.venv/
+venv/
+env/
